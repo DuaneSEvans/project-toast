@@ -1,5 +1,5 @@
 import React from "react"
-
+import Toast from "../Toast"
 import Button from "../Button"
 
 import styles from "./ToastPlayground.module.css"
@@ -11,6 +11,7 @@ function ToastPlayground() {
   const [selectedVariant, setSelectedVariant] = React.useState(
     VARIANT_OPTIONS[0]
   )
+  const [showToast, setShowToast] = React.useState(false)
 
   const onTextAreaChange = (event) => {
     setMessage(event.target.value)
@@ -18,8 +19,7 @@ function ToastPlayground() {
 
   const onSubmit = (event) => {
     event.preventDefault()
-    // TODO(DuaneSEvans): use message here
-    setMessage("")
+    setShowToast(true)
   }
 
   return (
@@ -28,6 +28,12 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
+
+      {showToast && (
+        <Toast variant={selectedVariant} onClose={() => setShowToast(false)}>
+          {message}
+        </Toast>
+      )}
 
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
