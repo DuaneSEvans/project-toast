@@ -1,8 +1,8 @@
 import React from "react"
-import Toast from "../Toast"
 import Button from "../Button"
 
 import styles from "./ToastPlayground.module.css"
+import ToastShelf from "../ToastShelf/ToastShelf"
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"]
 
@@ -11,7 +11,7 @@ function ToastPlayground() {
   const [selectedVariant, setSelectedVariant] = React.useState(
     VARIANT_OPTIONS[0]
   )
-  const [showToast, setShowToast] = React.useState(false)
+  const [toasts, setToasts] = React.useState([])
 
   const onTextAreaChange = (event) => {
     setMessage(event.target.value)
@@ -19,7 +19,17 @@ function ToastPlayground() {
 
   const onSubmit = (event) => {
     event.preventDefault()
-    setShowToast(true)
+    setToasts([
+      ...toasts,
+      { id: crypto.randomUUID(), message, variant: selectedVariant },
+    ])
+    setMessage("")
+    setSelectedVariant(VARIANT_OPTIONS[0])
+  }
+
+  const handleDismiss = (id) => {
+    const newToasts = toasts.filter((t) => t.id !== id)
+    setToasts(newToasts)
   }
 
   return (
@@ -29,11 +39,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {showToast && (
-        <Toast variant={selectedVariant} onClose={() => setShowToast(false)}>
-          {message}
-        </Toast>
-      )}
+      <ToastShelf toasts={toasts} handleDismiss={handleDismiss} />
 
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
